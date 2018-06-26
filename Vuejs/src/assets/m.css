@@ -1,0 +1,30 @@
+﻿
+body{
+  padding-bottom: 53px;
+}
+
+#app{
+
+}
+
+li{list-style: none;}
+
+.w-button{
+  display: inline-block;
+  vertical-align: middle;
+  width: 3.36rem;
+  text-align: center;
+  line-height: .90667rem;
+  font-size: .87333rem;
+  color: #fff;
+  border: 1px solid #e4393c;
+  background-color: #e4393c;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.vux-cell-box .weui-cell{
+  padding: 0;
+}
+
+
+
