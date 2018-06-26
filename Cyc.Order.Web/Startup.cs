@@ -42,6 +42,7 @@ namespace Cyc.Order.Web
                  options.AccessDeniedPath = new PathString("/denied");
              });
 
+            //分页配置
             services.AddBootstrapPagerGenerator(options =>
             {
                 options.HideOnSinglePage = true;
