@@ -1,0 +1,128 @@
+﻿@model GoodsViewModel
+@{
+    ViewData["Title"] = "商品管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<p>
+    <a asp-action="Create" class="btn btn-success"><i class="fa fa-plus"></i>新加商品</a>
+</p>
+<div class="card">
+    <div class="content">
+        <form asp-action="Index" class="form-inline" method="get">
+            <div class="form-group">
+                <label class="control-label">商品名称：</label>
+                <input class="form-control" asp-for="GoodsName">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">所属品牌：</label>
+                <select class="form-control" asp-for="BrandId">
+                    <option value="">请选择</option>
+                    @foreach (var item in Model.Brands)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-info" type="submit"><i class="fa fa-search"></i>查询</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="content">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>图片</th>
+                    <th>
+                        商品名称
+                    </th>
+                    <th>
+                        商品条码
+                    </th>
+                    <th>
+                        品牌
+                    </th>
+                    <th>
+                        规格
+                    </th>
+                    <th>
+                        单位
+                    </th>
+                    <th>
+                        添加时间
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Goods)
+            {
+                <tr>
+                    <td>
+                        <img src="@item.GoodsImg" alt="" width="60" height="60" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GoodsName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GoodsCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Brand.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GoodsSepc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GoodsUnit)
+                    </td>
+                    <td>
+                        @item.AddTime.ToShortDateString()
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">修改</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">详情</a> |
+                        <a class="delete" data-id="@item.Id" href="javascript:;">删除</a>
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+        <ul class="pagination">
+            <pager generation-mode="ListOnly" source="Model.Goods" />
+        </ul>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+
+            $(".delete").on("click", function () {
+                var id = $(this).data("id");
+                swal({
+                    title: '确定删除吗？',
+                    text: "删除商品后将无法恢复！",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '确定删除',
+                    cancelButtonText: '取消'
+                }).then(function () {
+                    $.post("/goods/delete", { id: id }, function (data) {
+                        swal('删除!', data.message, 'success').then(function () {
+                            location.reload();
+                        });
+                    });
+                }).catch(swal.noop);
+            });
+        })
+    </script>
+}

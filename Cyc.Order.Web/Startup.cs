@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cyc.Order.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sakura.AspNetCore.Mvc;
 
 namespace Cyc.Order.Web
 {
@@ -23,6 +27,29 @@ namespace Cyc.Order.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string connectionString = Configuration.GetConnectionString("MySqlConnection");
+
+            services.AddDbContext<OrderDbContext>(options =>
+            {
+                options.UseMySql(connectionString);
+            });
+
+            // 添加认证Cookie信息
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+             .AddCookie(options =>
+             {
+                 options.LoginPath = new PathString("/login");
+                 options.AccessDeniedPath = new PathString("/denied");
+             });
+
+            services.AddBootstrapPagerGenerator(options =>
+            {
+                options.HideOnSinglePage = true;
+                // Use default pager options.
+                options.ConfigureDefault();
+            });
+
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -48,6 +75,9 @@ namespace Cyc.Order.Web
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            // 验证中间件
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

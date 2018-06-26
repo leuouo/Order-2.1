@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyc.Order.Web", "Cyc.Order.Web\Cyc.Order.Web.csproj", "{A9A888D2-630F-40D2-8438-96B889FA7665}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyc.Order.Data", "Cyc.Order.Data\Cyc.Order.Data.csproj", "{81AFA98F-B187-465E-A952-0008B403353C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A9A888D2-630F-40D2-8438-96B889FA7665}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9A888D2-630F-40D2-8438-96B889FA7665}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9A888D2-630F-40D2-8438-96B889FA7665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81AFA98F-B187-465E-A952-0008B403353C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81AFA98F-B187-465E-A952-0008B403353C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81AFA98F-B187-465E-A952-0008B403353C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81AFA98F-B187-465E-A952-0008B403353C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

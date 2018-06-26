@@ -1,0 +1,134 @@
+﻿@model ShoppingCartViewModel
+@{
+    ViewData["Title"] = "我的购物车";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+<div class="cart-content">
+    @await Html.PartialAsync("_Cart", Model)
+</div>
+
+@section Scripts{
+<script>
+    $(function () {
+
+        var setCart = function (data) {
+            $(".cart-content").html(data);
+            $('[data-toggle="checkbox"]').each(function () {
+                var $checkbox = $(this);
+                $checkbox.checkbox();
+            });
+        }
+
+
+        $(".cart-content").on("change", "#chkAll", function () {
+            var isChecked = $(this).prop('checked');
+            $(".cart-tbody input[type='checkbox']").prop("checked", isChecked);
+            $.get("/shoppingcart/CartGoodsSelected", { id: 0, checkedAll: isChecked }, function (data) {
+                setCart(data);
+            });
+        });
+
+        $(".cart-content").on("change", ".goods input[type='checkbox']", function () {
+            var id = $(this).val();
+            $.get("/shoppingcart/CartGoodsSelected", { id: Number(id) }, function (data) {
+                $(".cart-content").html(data);
+                setCart(data);
+            });
+        });
+
+        $(".cart-content").on("click", ".plus", function () {
+            var $num = $(this).prev(".num");
+            var num = parseInt($num.val());
+            $num.val(num + 1);
+            var id = $(this).data("id");
+            $.get("/shoppingcart/quantity", { id: id, type: 'plus' }, function (data) {
+                setCart(data);
+            });
+        });
+
+        $(".cart-content").on("click", ".minus", function () {
+            var $num = $(this).next(".num");
+            var num = parseInt($num.val());
+            if (num === 1) {
+                return false;
+            }
+            $num.val(num - 1);
+            var id = $(this).data("id");
+            $.get("/shoppingcart/quantity", { id: id, type: 'minus' }, function (data) {
+                setCart(data);
+            });
+        });
+
+        $(".cart-content").on('input propertychange', '.num', function () {
+            var $that = $(this);
+            var val = $that.val();
+            if (isNaN(val)) {
+                $that.val(1);
+                val = 1;
+            }
+            var id = $that.data("id");
+            $.get("/shoppingcart/quantity", { id: id, type: '', num: val }, function (data) {
+                setCart(data);
+            });
+        });
+
+        $(".cart-content").on("click", ".cart-remove", function () {
+            var elementId = this.id;
+            var id = elementId.substring(elementId.indexOf('_') + 1);
+
+            swal({
+                title: '删除商品？',
+                text: '可在“商品选购”中继续加入该商品',
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: '确定',
+                cancelButtonText: '取消'
+            }).then(function () {
+                $.post("/shoppingcart/remove", { id: id }, function (data) {
+                    if (data.code === 100) {
+                        $(".product_" + id).remove();
+                    }
+                });
+            }).catch(function () {
+
+            })
+        });
+
+        $(".cart-content").on("click", ".btn-submit", function () {
+            var cartGoodsChecked = $(".goods input[type='checkbox']:checked");
+            if (cartGoodsChecked.length === 0) {
+                $.notify({
+                        message: "请至少选择一件商品哦~",
+                        icon: 'pe-7s-info',
+                    }, {
+                        type: "warning",
+                        placement: {
+                            from: "top",
+                            align: "center"
+                        },
+                        delay: 2000
+                    });
+                return false;
+            }
+
+            var ids = []
+            cartGoodsChecked.each(function (i, item) {
+                ids.push(Number($(this).val()));
+            });
+
+            $.ajax({
+                url: "/shoppingcart/PreOrder",
+                type: "post",
+                contentType: 'application/json',
+                data: JSON.stringify({ cartIds: ids }),
+                success: function (data) {
+                    if (data.code === 100) {
+                        location.href = data.message;
+                    }
+                }
+            });
+        })
+    })
+</script>
+}

@@ -1,0 +1,64 @@
+﻿@model Sakura.AspNetCore.IPagedList<Goods> 
+@{
+    ViewData["Title"] = "商品订购";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+
+<div class="sell-goods-list">
+    <ul class="searchlist-normal">
+        @foreach (var item in Model)
+    {
+            <li class="normal-list">
+                <div class="list-body">
+                    <div class="pro-img">
+                        <img src="@item.GoodsImg" alt="" />
+                    </div>
+
+                    <div class="product-info-box">
+                        <div class="product-name">
+                            <span>@item.GoodsName</span>
+
+                        </div>
+
+                        <div class="product-buy">
+                            <div class="product-price-m">
+                                <em>¥<span class="big-price">188.00</span></em>
+                            </div>
+
+                            <div class="product-btn add-cart" data-id="@item.Id">
+                                <i class="fa fa-shopping-cart"></i>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+}
+    </ul>
+
+</div>
+    
+@section Scripts{
+    <script>
+        $(function () {
+
+            $(".add-cart").on("click", function () {
+                var id = $(this).data("id");
+                $.post("/ShoppingCart/AddCart", { goodsId:id }, function (data) {
+                    $.notify({
+                        message: data.message,
+                        icon: 'pe-7s-check',
+                    }, {
+                            type: "success",
+                            placement: {
+                                from: "top",
+                                align: "center"
+                            },
+                            delay: 2000
+                        });
+                });
+            });
+        })
+    </script>
+}

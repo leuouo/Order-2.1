@@ -1,0 +1,69 @@
+﻿@model ShoppingCartViewModel
+
+<div class="cart-list">
+    @foreach (var item in Model.ShoppingCartGoodsModels)
+    {
+        <div class="product_@(item.Id) item">
+            <div class="goods">
+                <label class="checkbox">
+                    <input type="checkbox" value="@item.Id" @(item.Checked ? "checked" : "") data-toggle="checkbox" />
+                </label>
+
+                <img class="image" src="@item.GoodsImg" alt="" />
+
+                <div class="content">
+                    <div class="name">
+                        <a asp-action="Details" asp-controller="Sell" asp-route-id="@item.GoodsId">@item.GoodsName</a>
+                    </div>
+                    <p class="sku disabled">规格:@Html.DisplayFor(modelItem => item.GoodsSepc)</p>
+                    <div class="goods_line">
+                        <p class="price">
+                            <span>¥@item.Price</span>
+                        </p>
+                        <div class="num_and_more">
+                            <div class="num_wrap">
+                                <a class="minus" href="#" data-id="@item.Id"><i class="fa fa-minus-circle"></i></a>
+                                <input class="num" type="text" value="@item.Num" data-id="@item.Id" />
+                                <a class="plus" href="#" data-id="@item.Id"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="goods_sub_line">
+                        <div class="m_action">
+                            <a id="remove_@item.Id" class="cart-remove">删除</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    }
+</div>
+
+@if (Model.ShoppingCartGoodsModels.Count() == 0)
+{
+    <div class="cart-empty">
+        <p>购物车是空的~</p>
+        <a asp-controller="Sell" asp-action="List"><i class="pe-7s-cart"></i>去选购</a>
+    </div>
+}
+
+<div class="cart-toolbar fixed-bottom">
+    <div class="toolbar-wrap">
+        <div class="btn-area">
+            <input type="button" class="btn btn-danger btn-submit" value="去结算" />
+        </div>
+
+        <div class="price-sum">
+            <span class="">总价：</span>
+            <span class="price"><em>¥@Model.PriceSum</em></span>
+        </div>
+
+        <div class="amount-sum">
+            已选择<em>@Model.AmountSum</em>件商品
+        </div>
+    </div>
+</div>
