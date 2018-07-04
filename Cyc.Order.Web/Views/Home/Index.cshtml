@@ -94,11 +94,13 @@
     <script>
         $(function () {
 
+            var res = @Html.Raw(Model.OrderData);
+
             var data = {
-                labels: ['2018年1月', '2018年2月', '2018年3月', '2018年4月', '2018年5月', '2018年6月'],
+                labels: res.labels,
                 series: [
                     {
-                        data: [4, 2, 7, 5, 8, 13]
+                        data: res.series
                     }
                 ]
             };

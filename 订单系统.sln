@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyc.Order.Web", "Cyc.Order.Web\Cyc.Order.Web.csproj", "{A9A888D2-630F-40D2-8438-96B889FA7665}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cyc.Order.Web", "Cyc.Order.Web\Cyc.Order.Web.csproj", "{A9A888D2-630F-40D2-8438-96B889FA7665}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyc.Order.Data", "Cyc.Order.Data\Cyc.Order.Data.csproj", "{81AFA98F-B187-465E-A952-0008B403353C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cyc.Order.Data", "Cyc.Order.Data\Cyc.Order.Data.csproj", "{81AFA98F-B187-465E-A952-0008B403353C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

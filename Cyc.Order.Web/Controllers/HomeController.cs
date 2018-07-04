@@ -46,16 +46,19 @@ namespace Cyc.Order.Web.Controllers
             model.ShopCount = _context.Shops.Count(s => !s.IsDelete);
             model.GoodsCount = _context.Goods.Count(g => !g.IsDelete);
 
-            //var orderData = from o in _context.OrderRecords
-            //                where (o.OrderDate > fristDate.AddMonths(-6) && o.OrderDate < lastDate)
-            //                group o by new { o.OrderDate.Year, o.OrderDate.Month } into g
-            //                select new
-            //                {
-            //                    x = $"{g.Key.Year}年{g.Key.Month}月",
-            //                    y = g.Count()
-            //                };
+            var res = from o in _context.OrderRecords
+                      where (o.OrderDate > fristDate.AddMonths(-6) && o.OrderDate < lastDate)
+                      group o by new { o.OrderDate.Year, o.OrderDate.Month } into g
+                      select new
+                      {
+                          x = $"{g.Key.Year}年{g.Key.Month}月",
+                          y = g.Count()
+                      };
 
-            //model.OrderData = JsonConvert.SerializeObject(orderData.ToList());
+            var labels = res.Select(r => r.x).ToArray();
+            var series = res.Select(r => r.y).ToArray();
+
+            model.OrderData = JsonConvert.SerializeObject(new { labels, series });
 
             return View(model);
         }
