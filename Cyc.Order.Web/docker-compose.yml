@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  order-web:
+    image: cyccess/cqsnps
+    ports:
+      - "8802:8802"
+    volumes:
+      - /root/wwwroot/aspnetcore2_1:/wwwroot
+    environment:
+      - ASPNETCORE_URLS=http://*:8802
+    restart: always
+  cqsnps-web:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - /home/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /root/wwwroot/m.cqsnps.vip:/usr/share/nginx/html
+      - /root/wwwroot/log:/var/log/nginx
+    privileged: true
+    restart: always

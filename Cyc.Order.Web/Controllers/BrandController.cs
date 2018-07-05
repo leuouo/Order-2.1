@@ -29,7 +29,7 @@ namespace Cyc.Order.Web.Controllers
 
         public IActionResult Index()
         {
-            var list = _context.Brands.ToList();
+            var list = _context.Brands.Where(b => b.IsDelete == false).ToList();
             return View(list);
         }
 

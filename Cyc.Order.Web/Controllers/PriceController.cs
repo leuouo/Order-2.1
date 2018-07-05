@@ -50,7 +50,7 @@ namespace Cyc.Order.Web.Controllers
             }
             var viewModel = new PriceViewModel();
             viewModel.Row = await query.ToPagedListAsync(20, page);
-            viewModel.Brands = await _context.Brands.ToListAsync();
+            viewModel.Brands = await _context.Brands.Where(b => !b.IsDelete).ToListAsync();
             viewModel.GoodsName = goodsName;
             viewModel.BrandId = brandId;
 
@@ -111,7 +111,7 @@ namespace Cyc.Order.Web.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Add(int goodsId,int shopId,decimal price)
+        public async Task<IActionResult> Add(int goodsId, int shopId, decimal price)
         {
             var res = new ResultModel();
 
