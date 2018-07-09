@@ -36,7 +36,7 @@ namespace Cyc.Order.Web.Controllers
             {
                 query = query.Where(s => s.RegionId == regionId);
             }
-            model.Shops = await query.ToPagedListAsync(20, page);
+            model.Shops = await query.OrderByDescending(s => s.AddDate).ToPagedListAsync(20, page);
             model.Regions = await _context.Regions.ToListAsync();
             model.RegionId = regionId;
             model.ShopName = shopName;
@@ -93,6 +93,7 @@ namespace Cyc.Order.Web.Controllers
             {
                 shop.AddDate = DateTime.Now;
                 shop.Password = Utils.MD5Encrypt("888888");
+                shop.Status = AccountState.Certified;
                 _context.Add(shop);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -120,7 +121,7 @@ namespace Cyc.Order.Web.Controllers
         // POST: Shops/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Phone,Password,Linkman,Address,RegionId,AddDate,")] Shop shop)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Phone,Password,Linkman,Address,RegionId,AddDate,Status,IsDelete")] Shop shop)
         {
             if (id != shop.Id)
             {
@@ -160,6 +161,14 @@ namespace Cyc.Order.Web.Controllers
             shop.IsDelete = true;
             await _context.SaveChangesAsync();
             return Json(new { message = "店铺已删除." });
+        }
+
+        public async Task<IActionResult> Certified(int id)
+        {
+            var shop = await _context.Shops.SingleOrDefaultAsync(m => m.Id == id);
+            shop.Status = AccountState.Certified;
+            await _context.SaveChangesAsync();
+            return Json(new { message = "店铺认证通过." });
         }
 
         private bool ShopExists(int id)

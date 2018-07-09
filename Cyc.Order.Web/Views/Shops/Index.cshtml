@@ -55,6 +55,7 @@
                     <th>
                         添加时间
                     </th>
+                    <th>状态</th>
                     <th></th>
                 </tr>
             </thead>
@@ -78,7 +79,17 @@
                             @Html.DisplayFor(modelItem => item.Address)
                         </td>
                         <td>
-                            @item.AddDate.ToShortDateString()
+                            @item.AddDate.ToString("yyyy-MM-dd")
+                        </td>
+                        <td>
+                            @if (item.Status == Cyc.Order.Data.AccountState.Certified)
+                            {
+                                <span class="text-success">已认证</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">未认证</span>
+                            }
                         </td>
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.Id">修改</a> |

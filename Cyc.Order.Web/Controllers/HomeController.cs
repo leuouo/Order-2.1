@@ -175,6 +175,7 @@ namespace Cyc.Order.Web.Controllers
                 Phone = model.UserName,
                 Password = password,
                 UserType = 0,
+                Status = AccountState.Uncertified,
                 IsDelete = false,
                 AddDate = DateTime.Now
             };

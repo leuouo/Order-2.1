@@ -40,11 +40,15 @@ namespace Cyc.Order.Data.DataModel
         [Column("add_date")]
         public DateTime AddDate { get; set; }
 
+        [Column("status")]
+        public AccountState Status { get; set; }
+
         [Column("is_delete")]
         public bool IsDelete { get; set; }
 
-
         public virtual Region Region { get; set; }
-
     }
+
+
+
 }

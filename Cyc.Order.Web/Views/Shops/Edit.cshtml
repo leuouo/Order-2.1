@@ -10,6 +10,8 @@
                 <form asp-action="Edit">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Status" />
+                    <input type="hidden" asp-for="IsDelete" />
                     <div class="form-group">
                         <label asp-for="Name" class="control-label">店铺名称</label>
                         <input asp-for="Name" class="form-control" />
@@ -20,9 +22,9 @@
                         <select class="form-control" asp-for="RegionId">
                             <option value="">请选择</option>
                             @foreach (var item in (List<Region>)ViewData["Regions"])
-                        {
-                            <option value="@item.Id">@item.Name</option>
-                    }
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
                         </select>
                         <span asp-validation-for="RegionId" class="text-danger"></span>
                     </div>
