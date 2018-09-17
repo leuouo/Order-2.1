@@ -36,7 +36,7 @@
       </swipeout>
     </div>
 
-    <div class="m-billing">
+    <div class="m-billing" v-if="!isShowCartEmpty">
       <div class="m-billingCon">
         <div class="checkAll">
           <check-icon @click.native="chooseAll" :value.sync="checkAll">已选({{totalCount}})</check-icon>
