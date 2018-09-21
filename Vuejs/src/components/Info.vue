@@ -60,7 +60,9 @@
 
             this.list = res.data.regions.map(item=>{
               return {name:item.name,value:item.id.toString()};
-            })
+            });
+
+            this.list.unshift({name:'请选择区域',value:'0'});
           }
         },
         async save(){

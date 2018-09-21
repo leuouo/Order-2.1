@@ -48,7 +48,7 @@
             this.$cookies.set("cx_username", res.data.username, -1);
             this.$cookies.set('cx_usertype', res.data.userType, -1);
 
-            this.$router.push({path: "/category"});
+            this.$router.push({path: "/"});
           }
           else {
             this.$vux.toast.text(res.message);

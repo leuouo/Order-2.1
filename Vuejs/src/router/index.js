@@ -19,7 +19,7 @@ export default [
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/components/Register'),
+    component: () => import('@/components/Login'),
     meta: {title: '用户登录'}
   },
   {
