@@ -21,6 +21,67 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
+
+        [Route("Sell/Goods")]
+        public async Task<IActionResult> Index()
+        {
+            List<SellGoodsViewModel> sellGoodsViewModels = new List<SellGoodsViewModel>();
+            // 分类列表
+            var brandList = await _context.Brands.Where(b => !b.IsDelete).ToListAsync();
+            // 所有商品
+            var goodsList = await _context.Goods.Where(g => !g.IsDelete).ToListAsync();
+            // 商品价格
+            var priceList = await _context.GoodsPrices.Where(g => !g.IsDelete).ToListAsync();
+
+            foreach (var item in brandList)
+            {
+                // 获取分类下的所有商品
+                var sellGoods = goodsList.Where(g => g.BrandId == item.Id).Select(goods =>
+                new SellGoods
+                {
+                    Id = goods.Id,
+                    GoodsImg = goods.GoodsImg,
+                    GoodsCode = goods.GoodsCode,
+                    GoodsName = goods.GoodsName,
+                    GoodsSepc = goods.GoodsSepc,
+                    GoodsUnit = goods.GoodsUnit
+                }).ToList();
+
+                if (sellGoods.Count > 0)
+                {
+                    var sellGoodsViewModel = new SellGoodsViewModel();
+                    sellGoodsViewModel.Name = item.Name;
+                    // 遍历商品，获取商品价格
+                    foreach (var goods in sellGoods)
+                    {
+                        var goodsPrice = priceList.FirstOrDefault(p => p.GoodsId == goods.Id && p.ShopId == Sid && !p.IsDelete);
+                        if (goodsPrice != null)
+                        {
+                            goods.Price = goodsPrice.Price;
+                        }
+                        else
+                        {
+                            // 取商品默认价格
+                            goodsPrice = priceList.FirstOrDefault(p => p.GoodsId == goods.Id && p.ShopId == 0);
+                            if (goodsPrice != null)
+                            {
+                                goods.Price = goodsPrice.Price;
+                            }
+                        }
+                        sellGoodsViewModel.SellGoods = sellGoods;
+                    }
+                    sellGoodsViewModels.Add(sellGoodsViewModel);
+                }
+            }
+
+            var res = new ResultModel();
+            res.Code = 100;
+            res.Data = sellGoodsViewModels;
+     
+            return Json(res);
+        }
+
+
         [Route("Sell/List")]
         public async Task<IActionResult> Index(int page = 1, int brandId = 0)
         {

@@ -10,11 +10,13 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "better-scroll": "^1.13.2",
     "fastclick": "^1.0.6",
     "less": "^3.0.2",
     "less-loader": "^4.1.0",
     "vue": "^2.5.2",
     "vue-cookies": "^1.5.6",
+    "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.1",
     "vue-scroller": "^2.2.4",
     "vux": "^2.9.0"

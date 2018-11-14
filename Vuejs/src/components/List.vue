@@ -5,7 +5,7 @@
         <li @click="onDetailClick(item.goods.id)" v-for="(item,index) in list" :key="index" class="normal-list">
           <div class="list-body">
             <div class="pro-img">
-              <img :src="item.goods.goodsImg" alt=""/>
+              <img v-lazy="item.goods.goodsImg" alt=""/>
             </div>
 
             <div class="product-info-box">

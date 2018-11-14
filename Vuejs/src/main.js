@@ -6,6 +6,7 @@ import App from './App'
 import Router from 'vue-router'
 import routes from './router'
 import FastClick from 'fastclick'
+import VueLazyload from 'vue-lazyload'
 import VueScroller from 'vue-scroller'
 import VueCookies from 'vue-cookies'
 
@@ -20,6 +21,7 @@ Vue.use(VueScroller);
 Vue.use(ConfirmPlugin);
 Vue.use(ToastPlugin);
 Vue.use(VueCookies);
+Vue.use(VueLazyload);
 
 Vue.config.productionTip = false
 

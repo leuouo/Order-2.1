@@ -37,8 +37,8 @@ export default [
   {
     path: '/',
     name: 'category',
-    component: () => import('@/components/Category'),
-    meta: {title: '分类', keepAlive: true}
+    component: () => import('@/components/Category1'),
+    meta: {title: '菜单', keepAlive: true}
   },
   {
     path: '/my',

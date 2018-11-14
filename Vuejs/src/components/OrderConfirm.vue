@@ -24,7 +24,7 @@
       </div>
 
     <ul class="m-list">
-      <li @click="onDetailClick(item.goodsId)" v-for="item in goodList" class="item">
+      <li v-for="item in goodList" class="item">
         <div class="m-listItem vux-1px-b">
           <div class="m-colGood">
             <img :src="item.img" alt="">
@@ -85,9 +85,6 @@
         if(res.code === 100){
           this.$router.push({path:"/submitOrderSuccess",query:{oid:res.data}});
         }
-      },
-      onDetailClick(id){
-        this.$router.push({path:"/detail",query:{id:id}});
       }
     }
   }

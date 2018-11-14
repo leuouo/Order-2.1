@@ -14,19 +14,14 @@
               </div>
 
               <div class="info">
-                <div class="name">
-                  <router-link :to="{path:'/detail',query:{id:item.goodsId}}">
-                    {{item.goodsName}}
-                  </router-link>
-                  <a></a>
-                </div>
+                <div class="name">{{item.goodsName}}</div>
                 <p class="sku disabled">规格:{{item.goodsSepc}}</p>
                 <div class="goods_line">
                   <p class="price">
                     <span>¥{{item.price | money}}</span>
                   </p>
                   <div class="num_and_more">
-                    <x-number @on-change="replaceUpdate(index)" :min="1" :max="99" width="40px" v-model="item.num"></x-number>
+                    <x-number @on-change="replaceUpdate(index)" :min="1" :max="99" width="30px" v-model="item.num" button-style="round"></x-number>
                   </div>
                 </div>
               </div>
@@ -295,7 +290,7 @@
   .m-billing{
     position: fixed;
     z-index: 3;
-    bottom: 53px;
+    bottom: 54px;
     left: 0;
     width: 100%;
     background-color: #fff;

@@ -89,7 +89,7 @@ namespace Cyc.Order.Web.Controllers
         // 加入购物车
         [Route("/api/ShoppingCart/AddCart")]
         [HttpPost]
-        public async Task<IActionResult> AddCart(int? goodsId)
+        public async Task<IActionResult> AddCart(int? goodsId, int number = 1)
         {
             ResultModel model = new ResultModel();
 
@@ -105,7 +105,7 @@ namespace Cyc.Order.Web.Controllers
                 .SingleOrDefaultAsync(c => c.GoodsId == goodsId && c.ShopId == Sid && c.Status == 0);
             if (entity != null)
             {
-                entity.Num += 1;
+                entity.Num += number;
                 entity.Checked = true;
                 entity.UpdateTime = DateTime.Now;
             }
@@ -114,7 +114,7 @@ namespace Cyc.Order.Web.Controllers
                 var cart = new Cart();
                 cart.ShopId = Sid;
                 cart.GoodsId = goodsId.Value;
-                cart.Num = 1;
+                cart.Num = number;
                 cart.Status = 0;
                 cart.Checked = true;
                 cart.CreateTime = DateTime.Now;

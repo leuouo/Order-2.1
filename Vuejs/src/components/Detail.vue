@@ -1,62 +1,72 @@
 <template>
-  <div class="m-goodDetail" v-if="model">
-    <div class="m-goodImg">
-      <swiper :list="imgList" v-model="imgIndex" height="300px"></swiper>
-    </div>
-    <div class="m-content">
-      <div class="m-info">
-        <div class="name">{{model.goods.goodsName}}</div>
-        <div class="price">¥ {{model.price|money}}</div>
+  <popup v-model="showGoods" height="100%">
+    <div class="m-goodDetail" ref="goods">
+      <div class="m-goodImg">
+        <img :src="goods.goodsImg" alt="">
+
+      </div>
+      <div class="m-content">
+        <div class="m-info">
+          <div class="name">{{goods.goodsName}}</div>
+          <div class="price">¥{{goods.price|money}}</div>
+        </div>
+      </div>
+      <div class="m-detail">
+        <div class="line vux-1px-b">编码：{{goods.goodsCode}}</div>
+        <div class="line vux-1px-b">品牌：</div>
+        <div class="line vux-1px-b">规格：{{goods.goodsSepc}}</div>
+        <div class="line">单位：{{goods.goodsUnit}}</div>
+      </div>
+      <div class="m-btnGroup">
+        <div class="m-btnInner">
+          <div class="m-btnEmpty">
+            <inline-x-number :min="1" :max="99" width="40px" v-model="number" button-style="round"></inline-x-number>
+          </div>
+          <button @click="addToCart(goods.id)" class="btn w-button">加入购物车</button>
+        </div>
+      </div>
+
+      <div class="m-close" @click="showGoods=false">
+        <i class="icon icon-close"></i>
       </div>
     </div>
-    <div class="m-detail">
-      <div class="line vux-1px-b">编码：{{model.goods.goodsCode}}</div>
-      <div class="line vux-1px-b">品牌：{{model.goods.brand.name}}</div>
-      <div class="line vux-1px-b">规格：{{model.goods.goodsSepc}}</div>
-      <div class="line">单位：{{model.goods.goodsUnit}}</div>
-    </div>
-    <div class="m-btnGroup">
-      <div class="m-btnInner">
-        <div class="m-btnEmpty"></div>
-        <button @click="addToCart(model.goods.id)" class="btn w-button">加入购物车</button>
-      </div>
-    </div>
-  </div>
+  </popup>
 </template>
 
 <script>
-  import {Swiper} from 'vux'
+  import {Popup, InlineXNumber} from 'vux'
 
   export default {
     components: {
-      Swiper
+      Popup, InlineXNumber
+    },
+    props: {
+      goods: {
+        type: Object
+      }
     },
     data() {
       return {
-        model: null,
-        imgList:[],
-        imgIndex:0,
-        id: 0
+        showGoods: false,
+        number: 1
       }
     },
     created() {
-      this.id = this.$route.query.id;
-      this.getData();
+
     },
     methods: {
-      async getData() {
-        let res = await this.$http.post('/api/sell/details', {id: this.id});
-        this.model = res.data;
-        this.imgList.push({url:'javascript:;',img:this.model.goods.goodsImg});
+      show() {
+        this.number = 1;
+        this.showGoods = true;
       },
       async addToCart(goodsId) {
         let sid = this.$cookies.get("cx_sid");
-        if(!sid){
-          this.$router.push({path: "/login",  query: {redirect: this.$route.fullPath}});
+        if (!sid) {
+          this.$router.push({path: "/login", query: {redirect: this.$route.fullPath}});
           return;
         }
 
-        let res = await this.$http.post('/api/shoppingCart/AddCart', {goodsId: goodsId});
+        let res = await this.$http.post('/api/shoppingCart/AddCart', {goodsId: goodsId, number: this.number});
         if (res.code === 100) {
           this.$vux.toast.show({
             text: res.message
@@ -67,8 +77,34 @@
   }
 </script>
 
-<style scoped>
-  .m-content{
+<style scoped lang="less">
+  .m-goodDetail {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .m-goodImg {
+    height: 20rem;
+  }
+
+  .m-goodImg img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .m-close {
+    position: absolute;
+    top: .5rem;
+    right: .8rem;
+    .icon {
+      font-size: 32px;
+      line-height: 32px;
+      color: rgba(224, 221, 221, 0.9);
+    }
+  }
+
+  .m-content {
     position: relative;
     padding: .83333rem 0 .83333rem .8rem;
     border-bottom: .26667rem solid #f4f4f4;
@@ -77,33 +113,36 @@
     margin-bottom: .875rem;
   }
 
-  .m-info{
+  .m-info {
     flex: 1;
   }
-  .name{font-size: 1.2rem;}
 
-  .price{
+  .name {
     font-size: 1.2rem;
-    color: #f23030;
-    font-weight: 700;
   }
 
-  .m-detail{
+  .price {
+    font-size: 1.2rem;
+    color: #f23030;
+  }
+
+  .m-detail {
     padding: .83333rem 0 .83333rem .8rem;
     background-color: #fff;
     font-size: .875rem;
   }
-  .line{
+
+  .line {
     min-height: 2.4rem;
     line-height: 2.4rem;
   }
 
-  .m-btnGroup{
+  .m-btnGroup {
     position: relative;
     z-index: 4;
   }
 
-  .m-btnInner{
+  .m-btnInner {
     display: flex;
     position: fixed;
     bottom: 0;
@@ -112,12 +151,15 @@
     background-color: #fff;
     flex-flow: row nowrap;
     transform: translateX(-50%);
+    align-items: center;
   }
 
-  .m-btnEmpty{
+  .m-btnEmpty {
     width: 16rem;
+    text-align: right;
   }
-  .m-btnGroup .btn{
+
+  .m-btnGroup .btn {
     flex-grow: 1;
     align-items: center;
     justify-content: center;

@@ -99,7 +99,7 @@
   overflow: hidden;
 }
 .s-name{
-  font-size: .875rem;
+  font-size: 1rem;
   line-height: 1.6rem;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -107,7 +107,7 @@
   margin-bottom: .5rem;
 }
 .s-phone{
-  font-size: .65rem;
+  font-size: 13px;
   color:#999;
 }
 .m-profile-info .icon{

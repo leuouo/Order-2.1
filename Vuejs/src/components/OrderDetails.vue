@@ -50,7 +50,7 @@
         </div>
 
         <ul class="m-list">
-          <li @click="onDetailClick(item.goodsId)" v-for="(item,index) in data.orderRecordDetails" :key="index" class="item vux-1px-b">
+          <li v-for="(item,index) in data.orderRecordDetails" :key="index" class="item vux-1px-b">
             <div class="m-listItem">
               <div class="m-img">
                 <img :src="item.img" alt=""/>
@@ -109,9 +109,6 @@
             }
           }
         })
-      },
-      onDetailClick(id){
-        this.$router.push({path:"/detail",query:{id:id}});
       }
     }
   }
