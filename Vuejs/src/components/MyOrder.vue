@@ -1,60 +1,61 @@
 <template>
-<div>
-  <tab>
-    <tab-item selected @on-item-click="chooseTab(0)">全部订单</tab-item>
-    <tab-item @on-item-click="chooseTab(1)">待收货</tab-item>
-    <tab-item @on-item-click="chooseTab(10)">已完成</tab-item>
-    <tab-item @on-item-click="chooseTab(99)">已取消</tab-item>
-  </tab>
+  <div>
+    <tab>
+      <tab-item selected @on-item-click="chooseTab(0)">全部订单</tab-item>
+      <tab-item @on-item-click="chooseTab(1)">待收货</tab-item>
+      <tab-item @on-item-click="chooseTab(10)">已完成</tab-item>
+      <tab-item @on-item-click="chooseTab(99)">已取消</tab-item>
+    </tab>
 
-  <div class="m-orderList">
-    <scroller :on-refresh="refresh" :on-infinite="infinite" ref="myscroller" :no-data-text="noData">
-      <div v-for="(item,index) in list" :key="index" @click="go(item.orderRecord.id)" class="m-orderItem">
-        <div class="line">
+    <div class="m-orderList">
+      <scroller :on-refresh="refresh" :on-infinite="infinite" ref="myscroller" :no-data-text="noData">
+        <div v-for="(item,index) in list" :key="index" @click="go(item.orderRecord.id)" class="m-orderItem">
+          <div class="line">
           <span class="orderId">
               <span>订单编号：{{item.orderRecord.id}}</span>
           </span>
-          <div @click.stop.prevent="cancelOrder(index)" v-if="item.orderRecord.status===1" class="order-cancel">取消订单</div>
-        </div>
-        <div class="goods-detail">
-          <div v-if="item.orderRecordDetailList.length===1">
-            <div class="goodImg">
-              <div class="wraper">
-                <img :src="item.orderRecordDetailList[0].img">
+            <div @click.stop.prevent="cancelOrder(index)" v-if="item.orderRecord.status===1" class="order-cancel">取消订单</div>
+          </div>
+          <div class="goods-detail">
+            <div v-if="item.orderRecordDetailList.length===1">
+              <div class="goodImg">
+                <div class="wraper">
+                  <img :src="item.orderRecordDetailList[0].img">
+                </div>
+              </div>
+              <div class="goodInfo">
+                <div class="goodName">{{item.orderRecordDetailList[0].name}}</div>
+              </div>
+              <div class="goodStatus">
+                <div class="packageStatus">
+                  {{item.orderRecord.status|orderState}}
+                </div>
               </div>
             </div>
-            <div class="goodInfo">
-              <div class="goodName">{{item.orderRecordDetailList[0].name}}</div>
-            </div>
-            <div class="goodStatus">
-              <div class="packageStatus">
-                {{item.orderRecord.status|orderState}}
+            <div v-else>
+              <div v-for="(good,index) in item.orderRecordDetailList" v-if="index<3" class="goodImg ">
+                <div class="wraper">
+                  <img :src="good.img">
+                </div>
+              </div>
+              <div class="goodStatus">
+                <div class="packageStatus">
+                  {{item.orderRecord.status|orderState}}
+                </div>
               </div>
             </div>
           </div>
-          <div v-else>
-            <div v-for="(good,index) in item.orderRecordDetailList" v-if="index<3" class="goodImg ">
-              <div class="wraper">
-                <img :src="good.img">
-              </div>
-            </div>
-            <div class="goodStatus">
-              <div class="packageStatus">
-                {{item.orderRecord.status|orderState}}
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </scroller>
+      </scroller>
+    </div>
+    <toolbar :selected="1"></toolbar>
   </div>
-  <toolbar :selected="1"></toolbar>
-</div>
 </template>
 
 <script>
-  import Toolbar from '@/components/Toolbar.vue'
+  import Toolbar from './Toolbar'
   import {Tab, TabItem} from 'vux'
+
   export default {
     components: {
       Toolbar, Tab, TabItem
@@ -64,14 +65,14 @@
         list: [],
         page: 0,
         noData: '',
-        state:0,
+        state: 0,
       }
     },
     created() {
 
     },
     methods: {
-      chooseTab(state){
+      chooseTab(state) {
         this.state = state;
         this.page = 0;
         this.noData = '';
@@ -86,16 +87,19 @@
       },
       async infinite(done) {
         if (this.noData) {
-          done();
+          done(1);
           return;
         }
 
         this.page += 1;
-        let res = await this.$http.post('/api/Order', {page: this.page,status:this.state});
+        let res = await this.$http.post('/api/Order', {page: this.page, status: this.state});
 
         if (res.code === 100) {
-          if (res.data.length < 10) {
+          if (res.data.length > 0 && res.data.length < 10) {
             this.noData = '没有更多了';
+          }
+          else {
+            this.noData = "没有订单记录";
           }
           this.list = [...this.list, ...res.data];
         }
@@ -126,7 +130,32 @@
       go(oid) {
         this.$router.push({path: "/orderDetail", query: {oid: oid}});
       }
-    }
+    },
+    beforeRouteEnter(to, from, next) {
+      if (!sessionStorage.askPositon || from.path === '/') {//当前页面刷新不需要切换位置
+        sessionStorage.askPositon = '';
+        next();
+      } else {
+        next(vm => {
+          if (vm && vm.$refs.myscroller) {//通过vm实例访问this
+            setTimeout(function () {
+              vm.$refs.myscroller.scrollTo(0, sessionStorage.askPositon, false);
+            })//同步转异步操作
+          }
+        })
+      }
+    },
+    beforeRouteLeave(to, from, next) {//记录离开时的位置
+      sessionStorage.askPositon = this.$refs.myscroller.getPosition().top;
+
+      if(to.name === 'orderDetail'){
+        from.meta.keepAlive = true;
+      }
+      else{
+        from.meta.keepAlive = false;
+      }
+      next()
+    },
   }
 </script>
 
@@ -134,7 +163,7 @@
   /*订单*/
   .m-orderList {
     position: absolute;
-    top:0;
+    top: 0;
     left: 0;
     bottom: 0;
     width: 100%;

@@ -45,14 +45,13 @@
 </template>
 
 <script>
-  import {XDialog} from 'vux';
   import BScroll from 'better-scroll'
+  import {XDialog} from 'vux';
   import Toolbar from './Toolbar'
   import Detail from './Detail'
-  import CartButton from './CartButton'
 
   export default {
-    components: {Toolbar, XDialog,Detail,CartButton},
+    components: {Toolbar, XDialog,Detail},
     data() {
       return {
         list: [],

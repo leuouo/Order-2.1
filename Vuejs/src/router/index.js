@@ -1,20 +1,3 @@
-/*
-import Login from '@/components/Login'
-import Register from '@/components/Register'
-import MyOrder from '@/components/MyOrder'
-import OrderDetail from '@/components/OrderDetails'
-import Home from '@/components/Home'
-import Category from '@/components/Category'
-import My from '@/components/My'
-import Info from '@/components/Info'
-import Address from '@/components/Address'
-import List from '@/components/List'
-import Detail from '@/components/Detail'
-import ShoppingCart from '@/components/ShoppingCart'
-import OrderConfirm from '@/components/OrderConfirm'
-import SubmitOrderSuccess from '@/components/SubmitOrderSuccess'
-*/
-
 export default [
   {
     path: '/login',
@@ -38,7 +21,7 @@ export default [
     path: '/',
     name: 'category',
     component: () => import('@/components/Category1'),
-    meta: {title: '菜单', keepAlive: true}
+    meta: {title: '菜单'}
   },
   {
     path: '/my',
@@ -62,7 +45,7 @@ export default [
     path: '/myOrder',
     name: 'myOrder',
     component: () => import('@/components/MyOrder'),
-    meta: {title: '我的订单', requiresAuth: true}
+    meta: {title: '我的订单', requiresAuth: true, keepAlive: true}
   },
   {
     path: '/list',
